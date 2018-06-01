@@ -76,7 +76,7 @@ sudo dpkg -i /tmp/nvidia-docker_1.0.1-1_amd64.deb && rm /tmp/nvidia-docker_1.0.1
 sudo nvidia-docker run idealo/nvidia-docker-keras
 ```
 
-This will pull the Docker image `idealo/nvidia-docker-keras` from DockerHub and start the training.
+This will pull the Docker image `idealo/nvidia-docker-keras` from [DockerHub](https://hub.docker.com/r/idealo/nvidia-docker-keras) and start the training.
 The corresponding Dockerfile can be found under `Dockerfile_gpu` for reference.
 
 
