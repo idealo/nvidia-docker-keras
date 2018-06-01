@@ -1,6 +1,6 @@
 # Train Neural Networks on Amazon EC2 with GPU support
 
-Workflow that shows how to train neural networks on EC2 instances with GPU support. The goal is to present a simple and stable setup to train on GPU instances by using **Docker** and the NVIDIA Container Runtime **nvidia-docker**. A minimal example is given to train a small CNN built in Keras on MNIST. We achieve a 15-fold speedup in training time when training on GPU versus CPU.
+Workflow that shows how to train neural networks on EC2 instances with GPU support. The goal is to present a simple and stable setup to train on GPU instances by using **Docker** and the NVIDIA Container Runtime **nvidia-docker**. A minimal example is given to train a small CNN built in Keras on MNIST. We achieve a 30-fold speedup in training time when training on GPU versus CPU.
 
 
 ## Getting started
@@ -85,6 +85,8 @@ We trained MNIST for 3 epochs (~98% accuracy on validation set):
 • MacBook Pro (2.8 GHz Intel Core i7, 16GB RAM): **620 seconds**
 
 • p2.xlarge (Tesla K80): **41 seconds**
+
+• p3.2xlarge (Tesla V100): **20 seconds**
 
 
 ## Copyright
