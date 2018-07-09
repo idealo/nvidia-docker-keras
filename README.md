@@ -16,7 +16,7 @@ Workflow that shows how to train neural networks on EC2 instances with GPU suppo
 
 1. Build Docker image for CPU
 ```
-docker build -t docker-keras .
+docker build -t docker-keras . -f Dockerfile.cpu
 ```
 
 2. Run training container (**NB:** you might have to increase the container resources [[link](https://docs.docker.com/config/containers/resource_constraints/)])
@@ -74,7 +74,7 @@ sudo nvidia-docker run idealo/nvidia-docker-keras
 ```
 
 This will pull the Docker image `idealo/nvidia-docker-keras` from [DockerHub](https://hub.docker.com/r/idealo/nvidia-docker-keras) and start the training.
-The corresponding Dockerfile can be found under `Dockerfile_gpu` for reference.
+The corresponding Dockerfile can be found under `Dockerfile.gpu` for reference.
 
 
 

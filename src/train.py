@@ -1,4 +1,3 @@
-
 import time
 import numpy as np
 from keras.utils import to_categorical
@@ -54,5 +53,5 @@ def main():
     print('val accuracy: {}'.format(accuracy))
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
