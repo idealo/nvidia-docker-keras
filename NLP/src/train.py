@@ -8,6 +8,12 @@ from typing import Dict, Tuple
 import tensorflow as tf
 
 
+def print_devices():
+    visible_devices = tf.config.get_visible_devices()
+    for devices in visible_devices:
+        print(f"Visible device found: {devices}")
+
+
 def mlp(vocab_size, embedding_dim, max_length, no_classes):
     sequence_input = tf.keras.layers.Input(shape=(max_length,), dtype='int32', name="input0")
     embedding_layer = tf.keras.layers.Embedding(input_dim=vocab_size, output_dim=embedding_dim, mask_zero=True)
@@ -31,7 +37,7 @@ def custom_standardization(input_data):
                                     '[%s]' % re.escape(string.punctuation), '')
 
 
-def get_data_from_aclImdb(parameter : Dict) -> np.ndarray:
+def get_data_from_aclImdb(parameter: Dict) -> np.ndarray:
     url = "https://ai.stanford.edu/~amaas/data/sentiment/aclImdb_v1.tar.gz"
 
     dataset = tf.keras.utils.get_file("aclImdb_v1.tar.gz", url,
@@ -43,7 +49,7 @@ def get_data_from_aclImdb(parameter : Dict) -> np.ndarray:
     remove_dir = os.path.join(train_dir, 'unsup')
     shutil.rmtree(remove_dir)
     seed = 123
-    raw_ds = tf.keras.preprocessing.text_dataset_from_directory('aclImdb/train', batch_size=50,seed=seed)
+    raw_ds = tf.keras.preprocessing.text_dataset_from_directory('aclImdb/train', batch_size=50, seed=seed)
 
     vectorize_layer = tf.keras.layers.experimental.preprocessing.TextVectorization(
         standardize=custom_standardization,
@@ -71,7 +77,7 @@ def prepare_dataset(padded_input_data: np.ndarray, parameter: Dict) -> tf.data.D
     # to simulate multi-class problem, we randomly generate labels here
     # train_ds.map(lambda x, y: x, np.random.randint(low=0, high=no_classes - 1))
     labels = np.random.randint(low=0, high=parameter["no_classes"], size=(padded_input_data.shape[0]))
-    category_labels_mat = tf.keras.utils.to_categorical(labels, num_classes=parameter["no_classes"] )
+    category_labels_mat = tf.keras.utils.to_categorical(labels, num_classes=parameter["no_classes"])
 
     train_ds = tf.data.Dataset.from_tensor_slices(
         (tf.convert_to_tensor(padded_input_data),
@@ -105,8 +111,8 @@ def main():
                  "embedding_dim": 100,
                  "batch_size": 1024}
 
-
-    padded_input_data = get_data_from_aclImdb(parameter = parameter)
+    print_devices()
+    padded_input_data = get_data_from_aclImdb(parameter=parameter)
     print("Load and prepare dataset")
 
     results = {"no classes": [], "training time": [], "inference time": []}
