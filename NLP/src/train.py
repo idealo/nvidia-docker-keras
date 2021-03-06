@@ -43,8 +43,7 @@ def get_data_from_aclImdb(parameter : Dict) -> np.ndarray:
     remove_dir = os.path.join(train_dir, 'unsup')
     shutil.rmtree(remove_dir)
     seed = 123
-    raw_ds = tf.keras.preprocessing.text_dataset_from_directory('aclImdb/train', batch_size=50,
-                                                                seed=seed)
+    raw_ds = tf.keras.preprocessing.text_dataset_from_directory('aclImdb/train', batch_size=50,seed=seed)
 
     vectorize_layer = tf.keras.layers.experimental.preprocessing.TextVectorization(
         standardize=custom_standardization,
