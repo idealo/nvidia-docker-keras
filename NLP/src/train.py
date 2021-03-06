@@ -9,10 +9,9 @@ import tensorflow as tf
 
 
 def print_devices():
-    visible_devices = tf.config.get_visible_devices()
-    for devices in visible_devices:
-        print(f"Visible device found: {devices}")
-
+    print("\n------------------------")
+    print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
+    print("------------------------\n")
 
 def mlp(vocab_size, embedding_dim, max_length, no_classes):
     sequence_input = tf.keras.layers.Input(shape=(max_length,), dtype='int32', name="input0")
