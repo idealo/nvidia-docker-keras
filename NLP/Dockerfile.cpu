@@ -1,0 +1,12 @@
+FROM tensorflow/tensorflow:latest-py3
+
+COPY ./NLP/src /src
+
+WORKDIR /src
+
+RUN pip install -r requirements.txt
+
+ENV PYTHONPATH='/src/:$PYTHONPATH'
+
+CMD ["python", "train.py"]
+

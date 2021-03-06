@@ -45,7 +45,9 @@ docker-machine create --driver amazonec2 \
                       --amazonec2-vpc-id vpc-abc \
                       ec2-p2
 ```
-
+```
+docker-machine create --driver amazonec2 --amazonec2-region eu-central-1 --amazonec2-ami ami-0932440befd74cdba --amazonec2-instance-type m5.2xlarge  --amazonec2-vpc-id vpc-b0ec4fda ec2-p2
+```
 
 3. ssh into instance
 
