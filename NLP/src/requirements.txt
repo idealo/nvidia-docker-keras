@@ -1,2 +1,4 @@
 numpy
 tensorflow-datasets
+tensorflow-text
+tf-models-official
