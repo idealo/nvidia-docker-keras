@@ -238,7 +238,7 @@ def main():
                  "sequence_length": 150,
                  "embedding_dim": 100,
                  "batch_size": 128,
-                 "epochs" : 5}
+                 "epochs" : 2}
 
     print_devices()
     train_dataset = get_data_from_aclImdb()
