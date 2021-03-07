@@ -191,8 +191,15 @@ def prepare_dataset(text_data: np.ndarray, parameter: Dict, no_samples : int) ->
     return train_ds
 
 
-def run_mlp_test_track(train_ds: np.ndarray, parameter: Dict) -> Tuple[float, float]:
+def run_mlp_test_track(train_ds: tf.data.Dataset, parameter: Dict) -> Tuple[float, float]:
+    """
+    Perform training time and inference time test for multi-layer-perceptron model
 
+    :param tf.data.Dataset train_ds:
+    :param Dict parameter:
+    :return: training and inference time
+    :rtype: Tuple of float
+    """
     # build model
     print("create mlp model")
     model = mlp(vocab_size=parameter["vocab_size"], embedding_dim=parameter["embedding_dim"],
@@ -214,6 +221,14 @@ def run_mlp_test_track(train_ds: np.ndarray, parameter: Dict) -> Tuple[float, fl
 
 
 def run_bert_test_track(train_ds: tf.data.Dataset, parameter: Dict) -> Tuple[float, float]:
+    """
+    Perform training time and inference time test for bert model
+
+    :param tf.data.Dataset train_ds:
+    :param Dict parameter:
+    :return: training and inference time
+    :rtype: Tuple of float
+    """
     # build model
     print("create mlp model")
     model = bert(train_ds=train_ds, epochs=parameter["epochs"], no_classes=parameter["no_classes"])
