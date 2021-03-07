@@ -203,13 +203,13 @@ def run_mlp_test_track(train_ds: np.ndarray, parameter: Dict) -> Tuple[float, fl
     start_time = time.time()
     model.fit(train_ds, epochs=parameter["epochs"], verbose=2)
     train_time = time.time() - start_time
-    print("compliete")
+    print(f"complete in {train_time} [sec]")
     # start batch interference
     print("start inference test")
     start_time = time.time()
     model.predict(train_ds)
     inference_time = (time.time() - start_time) / len(train_ds)
-    print("complete")
+    print(f"complete in {inference_time} [sec]")
     return train_time, inference_time
 
 
@@ -223,13 +223,13 @@ def run_bert_test_track(train_ds: tf.data.Dataset, parameter: Dict) -> Tuple[flo
     start_time = time.time()
     model.fit(train_ds, epochs=parameter["epochs"], verbose=2)
     train_time = time.time() - start_time
-    print("complete")
+    print(f"complete in {train_time} [sec]")
     # start batch interference
     print("start inference test")
     start_time = time.time()
     model.predict(train_ds)
     inference_time = (time.time() - start_time) / len(train_ds)
-    print("complete")
+    print(f"complete in {inference_time} [sec]")
     return train_time, inference_time
 
 
