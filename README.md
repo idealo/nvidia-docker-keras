@@ -50,7 +50,7 @@ docker-machine create --driver amazonec2 \
 docker-machine create --driver amazonec2 \
                         --amazonec2-region eu-central-1 \
                         --amazonec2-ami ami-0ae9bf04fb7c502ea \
-                        --amazonec2-instance-type m5.2xlarge \
+                        --amazonec2-instance-type c5n.xlarge \
                         --amazonec2-root-size 100 \
                         --amazonec2-vpc-id vpc-b0ec4fda ec2-cpu 
 ```
@@ -61,10 +61,16 @@ docker-machine create --driver amazonec2 \
 docker-machine ssh ec2-mp5
 ```
 
-4. Run training container on GPU instance
+4. Run training container on CPU instance
 
 ```
 sudo nvidia-docker run torlof/nlp-cpu-docker-keras
+```
+
+5. Run training container on CPU instance
+
+```
+sudo nvidia-docker run torlof/nlp-nvidia-docker-keras
 ```
 
 This will pull the Docker image `idealo/nvidia-docker-keras` from [DockerHub](https://hub.docker.com/r/idealo/nvidia-docker-keras) and start the training.
