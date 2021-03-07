@@ -194,35 +194,42 @@ def prepare_dataset(text_data: np.ndarray, parameter: Dict, no_samples : int) ->
 def run_mlp_test_track(train_ds: np.ndarray, parameter: Dict) -> Tuple[float, float]:
 
     # build model
+    print("create mlp model")
     model = mlp(vocab_size=parameter["vocab_size"], embedding_dim=parameter["embedding_dim"],
                 max_length=parameter["sequence_length"], no_classes=parameter["no_classes"])
-
+    print("complete")
     # start training
+    print("start training")
     start_time = time.time()
     model.fit(train_ds, epochs=parameter["epochs"], verbose=2)
     train_time = time.time() - start_time
-
+    print("compliete")
     # start batch interference
+    print("start inference test")
     start_time = time.time()
-    model.predict(train_ds, parameter["batch_size"])
+    model.predict(train_ds)
     inference_time = (time.time() - start_time) / len(train_ds)
+    print("complete")
     return train_time, inference_time
 
 
 def run_bert_test_track(train_ds: tf.data.Dataset, parameter: Dict) -> Tuple[float, float]:
     # build model
-
+    print("create mlp model")
     model = bert(train_ds=train_ds, epochs=parameter["epochs"], no_classes=parameter["no_classes"])
-
+    print("complete")
     # start training
+    print("train model")
     start_time = time.time()
     model.fit(train_ds, epochs=parameter["epochs"], verbose=2)
     train_time = time.time() - start_time
-
+    print("complete")
     # start batch interference
+    print("start inference test")
     start_time = time.time()
-    model.predict(train_ds, parameter["batch_size"])
+    model.predict(train_ds)
     inference_time = (time.time() - start_time) / len(train_ds)
+    print("complete")
     return train_time, inference_time
 
 
