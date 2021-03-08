@@ -242,7 +242,7 @@ def run_bert_test_track(train_ds: tf.data.Dataset, parameter: Dict) -> Tuple[flo
     # start batch interference
     print("start inference test")
     start_time = time.time()
-    _= model(tf.constant(train_ds))
+    _= model.predict(train_ds)
     inference_time = (time.time() - start_time) / len(train_ds)
     print(f"complete in {inference_time} [sec]")
     return train_time, inference_time
