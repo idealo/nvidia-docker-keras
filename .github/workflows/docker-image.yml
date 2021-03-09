@@ -27,6 +27,8 @@ jobs:
         id: buildx
         uses: docker/setup-buildx-action@v1
     
+
+      
       - name: Build and push cpu
         id: docker_build_cpu
         uses: docker/build-push-action@v2
@@ -35,7 +37,7 @@ jobs:
           file: ./NLP/Dockerfile.cpu
           push: true
           tags: torlof/nlp-cpu-docker-keras:latest
-      
+
       - name: Build and push gpu
         id: docker_build_gpu
         uses: docker/build-push-action@v2
@@ -44,6 +46,6 @@ jobs:
           file: ./NLP/Dockerfile.gpu
           push: true
           tags: torlof/nlp-nvidia-docker-keras:latest
-          
+
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}

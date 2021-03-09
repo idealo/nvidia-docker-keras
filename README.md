@@ -49,7 +49,7 @@ docker-machine create --driver amazonec2 \
 ```
 docker-machine create --driver amazonec2 \
                         --amazonec2-region eu-central-1 \
-                        --amazonec2-ami ami-0ae9bf04fb7c502ea \
+                        --amazonec2-ami ami-047a51fa27710816e \
                         --amazonec2-instance-type c5n.xlarge \
                         --amazonec2-root-size 100 \
                         --amazonec2-vpc-id vpc-b0ec4fda ec2-cpu 
