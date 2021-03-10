@@ -79,9 +79,9 @@ RUN mkdir /tensorflow/app
 COPY ./NLP/src /tensorflow/app
 
 
-RUN pip install -r app/requirements.txt
+RUN pip install -r /tensorflow/app/requirements.txt
 
-ENV PYTHONPATH='/tensorflow/app/:$PYTHONPATH'
+#ENV PYTHONPATH='/tensorflow/app/:$PYTHONPATH'
 
-CMD ["python", "train.py"]
+CMD ["python", "/tensorflow/app/train.py"]
 
