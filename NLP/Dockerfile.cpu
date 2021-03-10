@@ -75,13 +75,13 @@ RUN bazel build -c opt \
             --jobs=26 \
             //tensorflow/tools/lib_package:libtensorflow
 
-COPY ./NLP/src /src
+RUN mkdir /tensorflow/app
+COPY ./NLP/src /tensorflow/app
 
-WORKDIR /src
 
 RUN pip install -r requirements.txt
 
-ENV PYTHONPATH='/src/:$PYTHONPATH'
+ENV PYTHONPATH='/tensorflow/app/:$PYTHONPATH'
 
 CMD ["python", "train.py"]
 
