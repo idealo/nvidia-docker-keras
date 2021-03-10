@@ -1,5 +1,4 @@
-#FROM tensorflow/tensorflow:2.3.1
-FROM ubuntu:18.04
+FROM python:3.8
 
 RUN apt update && apt install -y \
     build-essential \
@@ -16,7 +15,7 @@ RUN apt update && apt install -y \
     && rm -rf /var/lib/lists/*
 
 ENV PYTHON_BIN_PATH="/usr/bin/python" \
-    PYTHON_LIB_PATH="/usr/local/lib/python2.7/dist-packages" \
+    PYTHON_LIB_PATH="/usr/local/lib/python3.8/dist-packages" \
     PYTHONPATH=/tensorflow/lib \
     PYTHON_ARG=/tensorflow/lib \
     USE_BAZEL_VERSION=0.26.1 \
@@ -80,9 +79,9 @@ RUN mkdir /tensorflow/app
 COPY ./NLP/src /tensorflow/app
 
 
-RUN pip install -r app/requirements.txt
+RUN pip install tensorflow-datasets tensorflow-text tf-models-official
 
-ENV PYTHONPATH='/tensorflow/app/:$PYTHONPATH'
+#ENV PYTHONPATH='/tensorflow/app/:$PYTHONPATH'
 
-CMD ["python", "train.py"]
+CMD ["python", "/tensorflow/app/train.py"]
 
