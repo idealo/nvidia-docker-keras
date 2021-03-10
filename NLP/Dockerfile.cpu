@@ -79,7 +79,7 @@ RUN mkdir /tensorflow/app
 COPY ./NLP/src /tensorflow/app
 
 
-RUN pip install -r requirements.txt
+RUN pip install -r app/requirements.txt
 
 ENV PYTHONPATH='/tensorflow/app/:$PYTHONPATH'
 
