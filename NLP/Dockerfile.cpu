@@ -44,9 +44,9 @@ ENV PYTHON_BIN_PATH="/usr/bin/python3" \
     GCC_HOST_COMPILER_PATH="/usr/bin/gcc" \
     CC_OPT_FLAGS="-march=native"
 
-RUN pip3 install pip six numpy wheel setuptools mock 'future>=0.17.1' && \
-    pip3 install keras_applications --no-deps && \
-    pip3 install keras_preprocessing --no-deps
+RUN pip install pip six numpy wheel setuptools mock 'future>=0.17.1' && \
+    pip install keras_applications --no-deps && \
+    pip install keras_preprocessing --no-deps
 
 RUN echo $TF_VERSION
 
@@ -79,9 +79,9 @@ RUN mkdir /tensorflow/app
 COPY ./NLP/src /tensorflow/app
 
 
-RUN pip3 install tensorflow-datasets tensorflow-text tf-models-official
+RUN pip install tensorflow-datasets tensorflow-text tf-models-official
 
 #ENV PYTHONPATH='/tensorflow/app/:$PYTHONPATH'
 
-CMD ["python3", "/tensorflow/app/train.py"]
+CMD ["python", "/tensorflow/app/train.py"]
 
