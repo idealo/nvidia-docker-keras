@@ -14,8 +14,8 @@ RUN apt update && apt install -y \
     python-pip \
     && rm -rf /var/lib/lists/*
 
-ENV PYTHON_BIN_PATH="/usr/bin/python" \
-    PYTHON_LIB_PATH="/usr/local/lib/python2.7/dist-packages" \
+ENV PYTHON_BIN_PATH="/usr/bin/python3" \
+    PYTHON_LIB_PATH="/usr/local/lib/python3.7/dist-packages" \
     PYTHONPATH=/tensorflow/lib \
     PYTHON_ARG=/tensorflow/lib \
     USE_BAZEL_VERSION=0.26.1 \
@@ -44,9 +44,9 @@ ENV PYTHON_BIN_PATH="/usr/bin/python" \
     GCC_HOST_COMPILER_PATH="/usr/bin/gcc" \
     CC_OPT_FLAGS="-march=native"
 
-RUN pip install pip six numpy wheel setuptools mock 'future>=0.17.1' && \
-    pip install keras_applications --no-deps && \
-    pip install keras_preprocessing --no-deps
+RUN pip3 install pip six numpy wheel setuptools mock 'future>=0.17.1' && \
+    pip3 install keras_applications --no-deps && \
+    pip3 install keras_preprocessing --no-deps
 
 RUN echo $TF_VERSION
 
@@ -79,9 +79,9 @@ RUN mkdir /tensorflow/app
 COPY ./NLP/src /tensorflow/app
 
 
-RUN pip install -r /tensorflow/app/requirements.txt
+RUN pip3 install tensorflow-datasets tensorflow-text tf-models-official
 
 #ENV PYTHONPATH='/tensorflow/app/:$PYTHONPATH'
 
-CMD ["python", "/tensorflow/app/train.py"]
+CMD ["python3", "/tensorflow/app/train.py"]
 
