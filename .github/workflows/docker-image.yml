@@ -37,6 +37,7 @@ jobs:
           file: ./NLP/Dockerfile.cpu
           push: true
           tags: torlof/nlp-cpu-docker-keras:latest
+          log-level: error
 
       - name: Build and push gpu
         id: docker_build_gpu
