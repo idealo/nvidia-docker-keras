@@ -1,4 +1,4 @@
-FROM torlof/tensorflow.2.3-cpu-avx
+FROM tensorflow/tensorflow:2.3.2-cpu
 
 COPY ./NLP/src /src
 
