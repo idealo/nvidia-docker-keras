@@ -77,6 +77,9 @@ This will pull the Docker image `idealo/nvidia-docker-keras` from [DockerHub](ht
 The corresponding Dockerfile can be found under `Dockerfile.gpu` for reference.
 
 
+<iframe frameborder="0" seamless="seamless" scrolling="no" src="plots/Inference BERT Model Price comparision for different Instances.html">...
+
+
 
 ## Training time comparison
 
