@@ -1,6 +1,15 @@
 # Train Neural Networks on Amazon EC2 with GPU support
 
-Workflow that shows how to train neural networks on EC2 instances with GPU support. The goal is to present a simple and stable setup to train on GPU instances by using **Docker** and the NVIDIA Container Runtime **nvidia-docker**. A minimal example is given to train a small CNN built in Keras on MNIST. We achieve a 30-fold speedup in training time when training on GPU versus CPU.
+Workflow that shows how to train neural networks on EC2 instances with GPU support. 
+The goal is to present a simple and stable setup to train on GPU instances by using **Docker** and the NVIDIA Container 
+Runtime **nvidia-docker**. 
+
+Two minimal examples are given to train:
+ - a small built in Keras on MNIST image dataset
+ - a multi-layer perceptron (MLP) and BERT model on [aclImdb](https://ai.stanford.edu/~amaas/data/sentiment) sentiment dataset for NLP 
+   
+It is shown that a 30-fold speedup in training time when training on GPU versus CPU can be achieved, **but** only in respect
+to the applied model. E.g. for the MLP using CPU instances can be preferable.
 
 
 ## Getting started
@@ -14,14 +23,16 @@ Workflow that shows how to train neural networks on EC2 instances with GPU suppo
 
 ## Train locally on CPU
 
-1. Build Docker image for CPU
+1. Build Docker images for CPU
 ```
-docker build -t docker-keras . -f Dockerfile.cpu
+docker build -t docker-keras-image . -f Image/Dockerfile.cpu
+docker build -t docker-keras-nlp . -f NLP/Dockerfile.cpu
 ```
 
 2. Run training container (**NB:** you might have to increase the container resources [[link](https://docs.docker.com/config/containers/resource_constraints/)])
 ```
-docker run docker-keras
+docker run docker-keras-image
+docker run docker-keras-nlp
 ```
 
 
@@ -73,15 +84,13 @@ sudo nvidia-docker run torlof/nlp-cpu-docker-keras
 sudo nvidia-docker run torlof/nlp-nvidia-docker-keras
 ```
 
-This will pull the Docker image `idealo/nvidia-docker-keras` from [DockerHub](https://hub.docker.com/r/idealo/nvidia-docker-keras) and start the training.
-The corresponding Dockerfile can be found under `Dockerfile.gpu` for reference.
+This will pull the Docker image from [Dockerhub](https://hub.docker.com/r/torlof/nlp-nvidia-docker-keras).
+The corresponding Dockerfile for image example is `idealo/nvidia-docker-keras` and can be found 
+at [Idealo DockerHub](https://hub.docker.com/r/idealo/nvidia-docker-keras).
 
 
-<iframe width="400" height="400" seamless="seamless" scrolling="yes" src="plots/1.html">...
-
-
-
-## Training time comparison
+## Image classification example
+### Training time comparison
 
 We trained MNIST for 3 epochs (~98% accuracy on validation set):
 
@@ -90,6 +99,37 @@ We trained MNIST for 3 epochs (~98% accuracy on validation set):
 • p2.xlarge (Tesla K80): **41 seconds**
 
 • p3.2xlarge (Tesla V100): **20 seconds**
+
+## Text classification example
+For NLP use-case we trained on aclImdb dataset.
+
+We want to test two text classification architectures:
+ - large BERT model 
+ - lightweight MLP with a rather simple embedding table
+
+Since BERT is known for good performances on various tasks, lightweight MLP has its justification as it combines 
+computational efficient wiht convincing performances. 
+
+In addition we want to investigate the runtime performance for the low dimensional output (2 to 10 classes) and 
+large-scale (up to 20000) cases. 
+
+Since aclImdb is a binary classification problem we extend the dataset for multi-label classification by randomly
+relabel the existing sample. (Note this makes the accuracy metrics useless.) Our focus in on runtime comparison. 
+
+We have captured the training and inference runtime. Finally we are interested what instance provides use the 
+best cost efficiency therefore we caputred the cost for training and inference.
+
+### Training Runtime and Pricing
+
+![](plots/Training_Multilayer_Perceptron_Model_Runtime_.png)  ![](plots/Training_BERT_Model_Runtime_.png)
+
+![](plots/Training_Multilayer_Perceptron_Model_Price_.png)  ![](plots/Training_BERT_Model_Price_.png)
+
+### Inference Runtime and Pricing
+
+![](plots/Inference_Multilayer_Perceptron_Model_Runtime_.png)  ![](plots/Inference_BERT_Model_Runtime_.png)
+
+![](plots/Inference_Multilayer_Perceptron_Model_Price_.png)  ![](plots/Inference_BERT_Model_Price_.png)
 
 
 ## Copyright
