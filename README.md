@@ -121,7 +121,7 @@ best cost efficiency therefore we caputred the cost for training and inference.
 
 ### Training Runtime and Pricing
 
-![](./plots/Training_Multilayer_Perceptron_Model_Runtime_.png =200x)  ![](./plots/Training_BERT_Model_Runtime_.png)
+![](plots/Training_Multilayer_Perceptron_Model_Runtime_.png)  ![](./plots/Training_BERT_Model_Runtime_.png)
 
 ![](plots/Training_Multilayer_Perceptron_Model_Price_.png) ![](plots/Training_BERT_Model_Price_.png)
 
