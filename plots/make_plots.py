@@ -141,7 +141,7 @@ def plot(cpu_result, model_name, method, show_price, title, x_axis, y_axis):
         y = np.array(item[method])
         if show_price:
             y = y * cpu_result[cpu_name]["price"] / (60 * 60)
-        x = list(range(no_x))
+        x = y * cpu_result[cpu_name]["price"] / (60 * 60)
         fig.add_trace(
             go.Scatter(x=x,
                        y=y,
@@ -193,6 +193,58 @@ def plot(cpu_result, model_name, method, show_price, title, x_axis, y_axis):
     filename = title.replace(' ', '_').replace('[', '_').replace("]", "_")
     fig.write_html(file=f"{filename}.html", auto_open=False)
 
+def plot_scatter(cpu_result, model_name, method, title, x_axis, y_axis):
+
+    fig = go.Figure()
+    for n, cpu_name in enumerate(["c5n.2xlarge", "c5n.4xlarge","c5n.9xlarge","c5n.18xlarge"]):
+        item = cpu_result[cpu_name][model_name]
+        no_x = len(item[method])
+        y = np.array(item[method])
+        x = y * cpu_result[cpu_name]["price"] / (60 * 60)
+        fig.add_trace(
+            go.Scatter(x=x,
+                       y=y,
+                       name=cpu_name,
+                       mode="markers",
+                       marker=dict(size=[8+n*3] * no_x,
+                                   color=[_get_color(1)] * no_x)))
+
+
+    for n, cpu_name in enumerate(["m5.2xlarge", "m5.4xlarge", "m5.8xlarge", "m5.12xlarge"]):
+        item = cpu_result[cpu_name][model_name]
+        y = np.array(item[method])
+        x = y * cpu_result[cpu_name]["price"] / (60 * 60)
+        fig.add_trace(
+            go.Scatter(x=x,
+                       y=y,
+                       name=cpu_name,
+                       mode="markers",
+                       marker=dict(size=[8+n*3] * no_x,
+                                   color=[_get_color(2)] * no_x)))
+        #hovertemplate=   '<i>id</i>: %{y}' +'<b>%{text}</b>',text=text))
+
+    for n, cpu_name in enumerate(["g3.4xlarge", "p2.large", "g4dn.2xlarge", "p3.2xlarge"]):
+        item = cpu_result[cpu_name][model_name]
+        y = np.array(item[method])
+        x = y * cpu_result[cpu_name]["price"] / (60 * 60)
+        fig.add_trace(
+            go.Scatter(x=x,
+                       y=y,
+                       name=cpu_name,
+                       mode="markers",
+                       marker=dict(
+                           size=[8+n*3] * no_x,
+                           color=[_get_color(0)] * no_x
+                       )))
+
+    fig.update_xaxes(title=x_axis)
+    fig.update_yaxes(title=y_axis)
+    fig.update_layout(
+        title_text=title,
+        width=600, height=600)
+    fig.show()
+    filename = title.replace(' ', '_').replace('[', '_').replace("]", "_")
+    fig.write_html(file=f"{filename}.html", auto_open=False)
 
 plot(cpu_result, "mlp", show_price=False, y_axis="runtime [sec]", x_axis="no. classes", method="training time",
      title = "Training Multilayer Perceptron Model [Runtime]")
@@ -205,9 +257,20 @@ plot(cpu_result, "bert", show_price=True, y_axis="price [usd]", x_axis="no. clas
 
 plot(cpu_result, "mlp", show_price=False, y_axis="runtime [sec]", x_axis="no. classes", method="inference time",
      title = "Inference Multilayer Perceptron Model [Runtime]")
-plot(cpu_result, "bert", show_price=False, y_axis="runtime [sec]", x_axis="no. classes", method="inference time",
+plot(cpu_result, "bert", show_price=False, y_axis="runtime [sec]", x_axis="no. classes", method="met",
      title = "Inference BERT Model [Runtime]")
 plot(cpu_result, "mlp", show_price=True, y_axis="price [usd]", x_axis="no. classes", method="inference time",
      title = "Inference Multilayer Perceptron Model [Price]")
 plot(cpu_result, "bert", show_price=True, y_axis="price [usd]", x_axis="no. classes", method="inference time",
      title="Inference BERT Model [Price]")
+
+
+plot_scatter(cpu_result, "mlp", y_axis="runtime [sec]", x_axis="costs [usd]", method="training time",
+     title = "Training Multilayer Perceptron Model [Runtime vs Costs]")
+plot_scatter(cpu_result, "bert", y_axis="runtime [sec]", x_axis="costs [usd]", method="training time",
+     title = "Training BERT Model [Runtime vs Costs]")
+
+plot_scatter(cpu_result, "mlp", y_axis="runtime [sec]", x_axis="costs [usd]", method="inference time",
+     title = "Inference Multilayer Perceptron Model [Runtime vs Costs]")
+plot_scatter(cpu_result, "bert", y_axis="runtime [sec]", x_axis="costs [usd]", method="inference time",
+     title = "Inference BERT Model [Runtime vs Costs]")
