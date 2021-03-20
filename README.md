@@ -120,26 +120,25 @@ We have captured the training and inference runtime. Finally we are interested w
 best cost efficiency therefore we caputred the cost for training and inference.
 
 ### Training Runtime and Pricing
+<img src="plots/Training_Multilayer_Perceptron_Model__Runtime_.png" width="400" height="400" /> <img src="plots/Training_BERT_Model__Runtime_.png" width="400" height="400" />
 
-![](plots/Training_Multilayer_Perceptron_Model_Runtime_.png)  ![](./plots/Training_BERT_Model_Runtime_.png)
+<img src="plots/Training_Multilayer_Perceptron_Model__Price_.png" width="400" height="400" /> <img src="plots/Training_BERT_Model__Price_.png" width="400" height="400" />
 
-![](plots/Training_Multilayer_Perceptron_Model_Price_.png) ![](plots/Training_BERT_Model_Price_.png)
+<img src="plots/Training_Multilayer_Perceptron_Model__Runtime_vs_Costs_.png" width="400" height="400" /> <img src="plots/Training_BERT_Model__Runtime_vs_Costs_.png" width="400" height="400" />
 
-![](plots/Training_Multilayer_Perceptron_Model__Runtime_vs_Costs_.png) 
-
-![](plots/Training_BERT_Model__Runtime_vs_Costs_.png) 
+You can find these plots as interactive html plot at the **./plots** directory.
 
 ### Inference Runtime and Pricing
 
-![](plots/Inference_Multilayer_Perceptron_Model_Runtime_.png) ![](plots/Inference_BERT_Model_Runtime_.png)
+<img src="plots/Inference_Multilayer_Perceptron_Model__Runtime_.png" width="400" height="400" /> <img src="plots/Inference_BERT_Model__Runtime_.png" width="400" height="400" />
 
-![](plots/Inference_Multilayer_Perceptron_Model_Price_.png)  
+<img src="plots/Inference_Multilayer_Perceptron_Model__Price_.png" width="400" height="400" /> <img src="plots/Inference_BERT_Model__Price_.png" width="400" height="400" />
 
-![](plots/Inference_BERT_Model_Price_.png)
 
-![](plots/Inference_Multilayer_Perceptron_Model__Runtime_vs_Costs_.png)  
+<img src="plots/Inference_Multilayer_Perceptron_Model__Runtime_vs_Costs_.png" width="400" height="400" /> <img src="plots/Inference_BERT_Model__Runtime_vs_Costs_.png" width="400" height="400" />
 
-![](plots/Inference_BERT_Model__Runtime_vs_Costs_.png) 
+You can find these plots as interactive html plot at the **./plots** directory.
+
 ## Copyright
 
 See [LICENSE](LICENSE) for details.
