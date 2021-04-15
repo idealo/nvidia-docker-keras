@@ -230,7 +230,7 @@ def run_bert_test_track(train_ds: tf.data.Dataset, parameter: Dict) -> Tuple[flo
     :rtype: Tuple of float
     """
     # build model
-    print("create mlp model")
+    print("create bert model")
     model = bert(train_ds=train_ds, epochs=parameter["epochs"], no_classes=parameter["no_classes"])
     print("complete")
     # start training
@@ -275,11 +275,11 @@ def main():
         results["mlp"]["inference time"].append(runtimes[1])
 
 
-        train_ds = prepare_dataset(text_data=bert_text_data, parameter=parameter, no_samples=bert_text_data.shape[0])
-        runtimes = run_bert_test_track(train_ds=train_ds, parameter=parameter)
-        results["bert"]["batch_size"].append(batch_size)
-        results["bert"]["training time"].append(runtimes[0])
-        results["bert"]["inference time"].append(runtimes[1])
+        #train_ds = prepare_dataset(text_data=bert_text_data, parameter=parameter, no_samples=bert_text_data.shape[0])
+        #runtimes = run_bert_test_track(train_ds=train_ds, parameter=parameter)
+        #results["bert"]["batch_size"].append(batch_size)
+        #results["bert"]["training time"].append(runtimes[0])
+        #results["bert"]["inference time"].append(runtimes[1])
 
     print(results)
 

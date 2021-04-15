@@ -78,7 +78,7 @@ docker-machine ssh ec2-mp5
 sudo nvidia-docker run torlof/nlp-cpu-docker-keras
 ```
 
-5. Run training container on CPU instance
+5. Run training container on GPU instance
 
 ```
 sudo nvidia-docker run torlof/nlp-nvidia-docker-keras
