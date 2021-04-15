@@ -273,7 +273,7 @@ def main():
         results["mlp"]["batch_size"].append(batch_size)
         results["mlp"]["training time"].append(runtimes[0])
         results["mlp"]["inference time"].append(runtimes[1])
-
+        print(results)
 
         #train_ds = prepare_dataset(text_data=bert_text_data, parameter=parameter, no_samples=bert_text_data.shape[0])
         #runtimes = run_bert_test_track(train_ds=train_ds, parameter=parameter)
@@ -281,7 +281,7 @@ def main():
         #results["bert"]["training time"].append(runtimes[0])
         #results["bert"]["inference time"].append(runtimes[1])
 
-    print(results)
+
 
 
 if __name__ == '__main__':
