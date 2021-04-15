@@ -255,6 +255,7 @@ def main():
                  "batch_size": 128,
                  "epochs" : 2}
 
+    no_classes = 10000
     print_devices()
     train_dataset = get_data_from_aclImdb()
     mlp_text_data = preprocess_mlp_text(dataset=train_dataset, parameter=parameter)
@@ -264,8 +265,9 @@ def main():
     results ={"mlp" : {"no classes": [], "training time": [], "inference time": []},
               "bert" : {"no classes": [], "training time": [], "inference time": []}}
 
-    for no_classes in [2, 50, 100, 10000, 20000]:
+    for batch_size in [128, 500, 1000, 5000, 10000]:
         parameter["no_classes"] = no_classes
+        parameter["batch_size"] = batch_size
         train_ds = prepare_dataset(text_data=mlp_text_data, parameter=parameter, no_samples=mlp_text_data.shape[0])
         runtimes = run_mlp_test_track(train_ds=train_ds, parameter=parameter)
         results["mlp"]["no classes"].append(no_classes)
