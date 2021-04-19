@@ -69,19 +69,19 @@ docker-machine create --driver amazonec2 \
 3. ssh into instance
 
 ```
-docker-machine ssh ec2-mp5
+docker-machine ssh ec2-cpu
 ```
 
 4. Run training container on CPU instance
 
 ```
-sudo nvidia-docker run torlof/nlp-cpu-docker-keras
+sudo nvidia-docker run torlof/nlp-cpu-docker-keras --mlp_batch_test --bert_batch_test --mlp_class_test --bert_class_test
 ```
 
 5. Run training container on GPU instance
 
 ```
-sudo nvidia-docker run torlof/nlp-nvidia-docker-keras
+sudo nvidia-docker run torlof/nlp-nvidia-docker-keras --mlp_batch_test --bert_batch_test --mlp_class_test --bert_class_test
 ```
 
 This will pull the Docker image from [Dockerhub](https://hub.docker.com/r/torlof/nlp-nvidia-docker-keras).

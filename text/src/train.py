@@ -10,6 +10,7 @@ import tensorflow as tf
 from official.nlp import optimization
 import tensorflow_hub as hub
 import tensorflow_text as text
+import argparse
 
 
 def print_devices() -> None:
@@ -21,7 +22,7 @@ def print_devices() -> None:
     print("------------------------\n")
 
 
-def mlp(vocab_size : int, embedding_dim : int, max_length : int, no_classes : int) -> tf.keras.Model:
+def mlp(vocab_size: int, embedding_dim: int, max_length: int, no_classes: int) -> tf.keras.Model:
     """
     Build multi-layer perceptron model
 
@@ -47,7 +48,7 @@ def mlp(vocab_size : int, embedding_dim : int, max_length : int, no_classes : in
     return model
 
 
-def bert(train_ds : tf.data.Dataset, epochs : int, no_classes) -> tf.keras.Model:
+def bert(train_ds: tf.data.Dataset, epochs: int, no_classes) -> tf.keras.Model:
     """
     Build bert model
 
@@ -122,7 +123,7 @@ def get_data_from_aclImdb() -> tf.data.Dataset:
     return raw_ds
 
 
-def preprocess_mlp_text(dataset : tf.data.Dataset, parameter: Dict) -> np.ndarray:
+def preprocess_mlp_text(dataset: tf.data.Dataset, parameter: Dict) -> np.ndarray:
     """
     Perform tokenization for MLP model
 
@@ -152,7 +153,7 @@ def preprocess_mlp_text(dataset : tf.data.Dataset, parameter: Dict) -> np.ndarra
     return np.vstack(tokenized_texts)
 
 
-def preprocess_bert_text(dataset : tf.data.Dataset) -> np.ndarray:
+def preprocess_bert_text(dataset: tf.data.Dataset) -> np.ndarray:
     """
     Perform tokenization for BERT model
 
@@ -169,7 +170,7 @@ def preprocess_bert_text(dataset : tf.data.Dataset) -> np.ndarray:
     return np.vstack(tokenized_texts)
 
 
-def prepare_dataset(text_data: np.ndarray, parameter: Dict, no_samples : int) -> tf.data.Dataset:
+def prepare_dataset(text_data: np.ndarray, parameter: Dict, no_samples: int) -> tf.data.Dataset:
     """
     To simulate multi-class problem, we randomly generate labels here
 
@@ -242,47 +243,88 @@ def run_bert_test_track(train_ds: tf.data.Dataset, parameter: Dict) -> Tuple[flo
     # start batch interference
     print("start inference test")
     start_time = time.time()
-    _= model.predict(train_ds)
+    _ = model.predict(train_ds)
     inference_time = (time.time() - start_time) / len(train_ds)
     print(f"complete in {inference_time} [sec]")
     return train_time, inference_time
 
 
-def main():
-    parameter = {"vocab_size": 80000,
-                 "sequence_length": 150,
-                 "embedding_dim": 100,
-                 "batch_size": 128,
-                 "epochs" : 2}
+def default_parameter() -> Dict:
+    """
+    Get default parameter
 
-    no_classes = 10000
+    :return: Dictionary containing defailt parameter
+    """
+    return {"vocab_size": 80000, "sequence_length": 150, "embedding_dim": 100, "batch_size": 128, "epochs": 2,
+            "no_classes": 10000}
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Nvidia docker keras training @idealo")
+    parser.add_argument("--mlp_batch_test", type=str,
+                        help="Run multilayer perceptron runtime benchmark for multiple batches")
+    parser.add_argument("--bert_batch_test", type=str, help="Run BERT runtime benchmarkwith for multiple batches")
+    parser.add_argument("--mlp_class_test", type=str,
+                        help="Run multilayer perceptron runtime benchmark for multiple batches")
+    parser.add_argument("--bert_class_test", type=str, help="Run BERT runtime benchmark for multiple batches")
+    args = parser.parse_args()
+
+
     print_devices()
     train_dataset = get_data_from_aclImdb()
-    mlp_text_data = preprocess_mlp_text(dataset=train_dataset, parameter=parameter)
+    mlp_text_data = preprocess_mlp_text(dataset=train_dataset, parameter=default_parameter())
     bert_text_data = preprocess_bert_text(dataset=train_dataset)
     print("Load and prepare dataset")
 
-    results ={"mlp" : {"no classes": [], "training time": [], "inference time": []},
-              "bert" : {"no classes": [], "training time": [], "inference time": []}}
+    results = {"mlp": [{"no classes": [], "training time": [], "inference time": []},
+                       {"batches": [], "training time": [], "inference time": []}],
+               "bert": {"no classes": [], "training time": [], "inference time": []}}
 
-    for batch_size in [128, 500, 1000, 5000, 10000]:
-        parameter["no_classes"] = no_classes
-        parameter["batch_size"] = batch_size
-        train_ds = prepare_dataset(text_data=mlp_text_data, parameter=parameter, no_samples=mlp_text_data.shape[0])
-        runtimes = run_mlp_test_track(train_ds=train_ds, parameter=parameter)
-        results["mlp"]["batch_size"].append(batch_size)
-        results["mlp"]["training time"].append(runtimes[0])
-        results["mlp"]["inference time"].append(runtimes[1])
-        print(results)
+    if args.mlp_batch_test:
+        for batch_size in [128, 500, 1000, 5000, 10000]:
+            parameter = default_parameter()
+            parameter["batch_size"] = batch_size
+            train_ds = prepare_dataset(text_data=mlp_text_data, parameter=parameter, no_samples=mlp_text_data.shape[0])
+            runtimes = run_mlp_test_track(train_ds=train_ds, parameter=parameter)
+            results["mlp"][1]["batch_size"].append(batch_size)
+            results["mlp"][1]["training time"].append(runtimes[0])
+            results["mlp"][1]["inference time"].append(runtimes[1])
+            print(results)
 
-        #train_ds = prepare_dataset(text_data=bert_text_data, parameter=parameter, no_samples=bert_text_data.shape[0])
-        #runtimes = run_bert_test_track(train_ds=train_ds, parameter=parameter)
-        #results["bert"]["batch_size"].append(batch_size)
-        #results["bert"]["training time"].append(runtimes[0])
-        #results["bert"]["inference time"].append(runtimes[1])
+    if args.bert_batch_test:
+        for batch_size in [128, 500, 1000, 5000, 10000]:
+            parameter = default_parameter()
+            parameter["batch_size"] = batch_size
+            train_ds = prepare_dataset(text_data=bert_text_data, parameter=parameter, no_samples=bert_text_data.shape[0])
+            runtimes = run_bert_test_track(train_ds=train_ds, parameter=parameter)
+            results["bert"][1]["batch_size"].append(batch_size)
+            results["bert"][1]["training time"].append(runtimes[0])
+            results["bert"][1]["inference time"].append(runtimes[1])
 
+    if args.mlp_class_test:
+        for no_classes in [2, 50, 100, 10000, 20000]:
+            parameter = default_parameter()
+            parameter["no_classes"] = no_classes
+            train_ds = prepare_dataset(text_data=mlp_text_data, parameter=parameter, no_samples=mlp_text_data.shape[0])
+            runtimes = run_mlp_test_track(train_ds=train_ds, parameter=parameter)
+            results["mlp"][0]["no_classes"].append(no_classes)
+            results["mlp"][0]["training time"].append(runtimes[0])
+            results["mlp"][0]["inference time"].append(runtimes[1])
+            print(results)
 
+    if args.bert_class_test:
+        for no_classes in [2, 50, 100, 10000, 20000]:
+            parameter = default_parameter()
+            parameter["no_classes"] = no_classes
+            train_ds = prepare_dataset(text_data=bert_text_data, parameter=parameter,
+                                       no_samples=bert_text_data.shape[0])
+            runtimes = run_bert_test_track(train_ds=train_ds, parameter=parameter)
+            results["bert"][0]["no_classes"].append(no_classes)
+            results["bert"][0]["training time"].append(runtimes[0])
+            results["bert"][0]["inference time"].append(runtimes[1])
 
-
+    print("[Final Result]")
+    print(results)
 if __name__ == '__main__':
     main()
