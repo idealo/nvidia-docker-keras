@@ -9,7 +9,6 @@ from typing import Dict, Tuple
 import tensorflow as tf
 from official.nlp import optimization
 import tensorflow_hub as hub
-import tensorflow_text as text
 import argparse
 
 
