@@ -25,8 +25,8 @@ to the applied model. E.g. for the MLP using CPU instances can be preferable.
 
 1. Build Docker images for CPU
 ```
-docker build -t docker-keras-image . -f Image/Dockerfile.cpu
-docker build -t docker-keras-nlp . -f NLP/Dockerfile.cpu
+docker build -t docker-keras-image . -f image/Dockerfile.cpu
+docker build -t docker-keras-nlp . -f text/Dockerfile.cpu
 ```
 
 2. Run training container (**NB:** you might have to increase the container resources [[link](https://docs.docker.com/config/containers/resource_constraints/)])
@@ -75,13 +75,14 @@ docker-machine ssh ec2-cpu
 4. Run training container on CPU instance
 
 ```
-sudo nvidia-docker run torlof/nlp-cpu-docker-keras --mlp_batch_test --bert_batch_test --mlp_class_test --bert_class_test
+sudo nvidia-docker run idealo/nvidia-docker-keras:1.0.0-cpu --mlp_batch_test --bert_batch_test --mlp_class_test --bert_class_test
 ```
 
 5. Run training container on GPU instance
 
 ```
-sudo nvidia-docker run torlof/nlp-nvidia-docker-keras --mlp_batch_test --bert_batch_test --mlp_class_test --bert_class_test
+sudo nvidia-docker run idealo/nvidia-docker-keras:1.0.0-gpu --mlp_batch_test --bert_batch_test --mlp_class_test --bert_class_test --mlp_batch_test --bert_batch_test --mlp_class_test --bert_class_test
+sudo nvidia-docker run torlof/nlp-nvidia-docker-keras --mlp_batch_test --bert_batch_test --mlp_class_test --bert_class_test --mlp_batch_test --bert_batch_test --mlp_class_test --bert_class_test
 ```
 
 This will pull the Docker image from [Dockerhub](https://hub.docker.com/r/torlof/nlp-nvidia-docker-keras).
