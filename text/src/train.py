@@ -3,7 +3,7 @@ import numpy as np
 import string
 import re
 import os
-import sys
+import tensorflow_text as text
 import shutil
 from typing import Dict, Tuple
 import tensorflow as tf
@@ -57,7 +57,7 @@ def bert(train_ds: tf.data.Dataset, epochs: int, no_classes) -> tf.keras.Model:
     :return: model object
     :rtype: tf.keras.Model
     """
-    tfhub_handle_encoder = "https://tfhub.dev/tensorflow/small_bert/bert_en_uncased_L-4_H-512_A-8/1"
+    tfhub_handle_encoder = "https://tfhub.dev/tensorflow/small_bert/bert_en_uncased_L-2_H-128_A-2/2"
     tfhub_handle_preprocess = "https://tfhub.dev/tensorflow/bert_en_uncased_preprocess/3"
 
     text_input = tf.keras.layers.Input(shape=(), dtype=tf.string, name='text')
@@ -186,7 +186,7 @@ def prepare_dataset(text_data: np.ndarray, parameter: Dict, no_samples: int) -> 
     train_ds = tf.data.Dataset.from_tensor_slices(
         (tf.convert_to_tensor(text_data),
          tf.convert_to_tensor(category_labels_mat)))
-    train_ds = train_ds.shuffle(buffer_size=10000)
+    train_ds = train_ds.shuffle(buffer_size=25000)
     train_ds = train_ds.batch(parameter["batch_size"]).prefetch(tf.data.experimental.AUTOTUNE)
     return train_ds
 
@@ -254,21 +254,22 @@ def default_parameter() -> Dict:
 
     :return: Dictionary containing defailt parameter
     """
-    return {"vocab_size": 80000, "sequence_length": 150, "embedding_dim": 100, "batch_size": 128, "epochs": 2,
-            "no_classes": 10000}
+    return {"vocab_size": 80000, "sequence_length": 150, "embedding_dim": 100, "batch_size": 100, "epochs": 2,
+            "no_classes": 20000}
 
 
 def main():
     parser = argparse.ArgumentParser(
         description="Nvidia docker keras training @idealo")
-    parser.add_argument("--mlp_batch_test", type=str,
+    parser.add_argument("--mlp_batch_test", action='store_true',
                         help="Run multilayer perceptron runtime benchmark for multiple batches")
-    parser.add_argument("--bert_batch_test", type=str, help="Run BERT runtime benchmarkwith for multiple batches")
-    parser.add_argument("--mlp_class_test", type=str,
+    parser.add_argument("--bert_batch_test", action='store_true',
+                        help="Run BERT runtime benchmarkwith for multiple batches")
+    parser.add_argument("--mlp_class_test", action='store_true',
                         help="Run multilayer perceptron runtime benchmark for multiple batches")
-    parser.add_argument("--bert_class_test", type=str, help="Run BERT runtime benchmark for multiple batches")
+    parser.add_argument("--bert_class_test", action='store_true',
+                        help="Run BERT runtime benchmark for multiple batches")
     args = parser.parse_args()
-
 
     print_devices()
     train_dataset = get_data_from_aclImdb()
@@ -277,51 +278,73 @@ def main():
     print("Load and prepare dataset")
 
     results = {"mlp": [{"no classes": [], "training time": [], "inference time": []},
-                       {"batches": [], "training time": [], "inference time": []}],
-               "bert": {"no classes": [], "training time": [], "inference time": []}}
+                       {"batch size": [], "training time": [], "inference time": []}],
+               "bert": [{"no classes": [], "training time": [], "inference time": []},
+                        {"batch size": [], "training time": [], "inference time": []}]}
 
     if args.mlp_batch_test:
-        for batch_size in [128, 500, 1000, 5000, 10000]:
+        for batch_size in [50, 100, 200, 500, 1000, 2000, 5000]:
             parameter = default_parameter()
             parameter["batch_size"] = batch_size
+            print("Apply Batch Size", batch_size)
             train_ds = prepare_dataset(text_data=mlp_text_data, parameter=parameter, no_samples=mlp_text_data.shape[0])
-            runtimes = run_mlp_test_track(train_ds=train_ds, parameter=parameter)
-            results["mlp"][1]["batch_size"].append(batch_size)
-            results["mlp"][1]["training time"].append(runtimes[0])
-            results["mlp"][1]["inference time"].append(runtimes[1])
-            print(results)
+            try:
+                runtimes = run_mlp_test_track(train_ds=train_ds, parameter=parameter)
+                results["mlp"][1]["batch size"].append(batch_size)
+                results["mlp"][1]["training time"].append(runtimes[0])
+                results["mlp"][1]["inference time"].append(runtimes[1])
+                print(results)
+            except:
+                # in case of OOM abourt
+                break
 
     if args.bert_batch_test:
-        for batch_size in [128, 500, 1000, 5000, 10000]:
+        for batch_size in [50, 100, 200, 500, 1000, 2000, 5000]:
             parameter = default_parameter()
             parameter["batch_size"] = batch_size
+            print("\nApply Batch Size\n", batch_size)
             train_ds = prepare_dataset(text_data=bert_text_data, parameter=parameter, no_samples=bert_text_data.shape[0])
-            runtimes = run_bert_test_track(train_ds=train_ds, parameter=parameter)
-            results["bert"][1]["batch_size"].append(batch_size)
-            results["bert"][1]["training time"].append(runtimes[0])
-            results["bert"][1]["inference time"].append(runtimes[1])
+            try:
+                runtimes = run_bert_test_track(train_ds=train_ds, parameter=parameter)
+                results["bert"][1]["batch size"].append(batch_size)
+                results["bert"][1]["training time"].append(runtimes[0])
+                results["bert"][1]["inference time"].append(runtimes[1])
+                print(results)
+            except:
+                # in case of OOM abourt
+                break
 
     if args.mlp_class_test:
         for no_classes in [2, 50, 100, 10000, 20000]:
             parameter = default_parameter()
             parameter["no_classes"] = no_classes
+            print("Apply no Classes", no_classes)
             train_ds = prepare_dataset(text_data=mlp_text_data, parameter=parameter, no_samples=mlp_text_data.shape[0])
-            runtimes = run_mlp_test_track(train_ds=train_ds, parameter=parameter)
-            results["mlp"][0]["no_classes"].append(no_classes)
-            results["mlp"][0]["training time"].append(runtimes[0])
-            results["mlp"][0]["inference time"].append(runtimes[1])
-            print(results)
+            try:
+                runtimes = run_mlp_test_track(train_ds=train_ds, parameter=parameter)
+                results["mlp"][0]["no classes"].append(no_classes)
+                results["mlp"][0]["training time"].append(runtimes[0])
+                results["mlp"][0]["inference time"].append(runtimes[1])
+                print(results)
+            except:
+                # in case of OOM abourt
+                break
 
     if args.bert_class_test:
         for no_classes in [2, 50, 100, 10000, 20000]:
             parameter = default_parameter()
             parameter["no_classes"] = no_classes
-            train_ds = prepare_dataset(text_data=bert_text_data, parameter=parameter,
-                                       no_samples=bert_text_data.shape[0])
-            runtimes = run_bert_test_track(train_ds=train_ds, parameter=parameter)
-            results["bert"][0]["no_classes"].append(no_classes)
-            results["bert"][0]["training time"].append(runtimes[0])
-            results["bert"][0]["inference time"].append(runtimes[1])
+            print("Apply no Classes", no_classes)
+            train_ds = prepare_dataset(dataset=train_dataset, parameter=parameter)
+            try:
+                runtimes = run_bert_test_track(train_ds=train_ds, parameter=parameter)
+                results["bert"][0]["no classes"].append(no_classes)
+                results["bert"][0]["training time"].append(runtimes[0])
+                results["bert"][0]["inference time"].append(runtimes[1])
+                print(results)
+            except:
+                # in case of OOM abourt
+                break
 
     print("[Final Result]")
     print(results)

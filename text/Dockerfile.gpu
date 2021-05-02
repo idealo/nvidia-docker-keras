@@ -1,11 +1,9 @@
 FROM 763104351884.dkr.ecr.eu-central-1.amazonaws.com/tensorflow-training:2.4.1-gpu-py37-cu110-ubuntu18.04
-
 # install tf-models-official from source to avoid tensorflow being overwritten by pip
 RUN git clone https://github.com/tensorflow/models.git && \
-    pip3 install --user -r /models/official/requirements.txt 
-
+    cd models && \
+    pip3 install --user -r official/requirements.txt
+RUN pip3 install --user tensorflow-text>=2.4.1
 COPY ./src /src
-
 ENV PYTHONPATH='/src/:$PYTHONPATH:/models'
-
 ENTRYPOINT ["python", "-m", "src.train"]
